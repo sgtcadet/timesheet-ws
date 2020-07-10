@@ -1,0 +1,64 @@
+#server:
+#  error:
+#    include-stacktrace: never
+logging:
+  level:
+    org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: ERROR
+    web: DEBUG
+
+spring:
+  profiles:
+    # active: ${spring.profiles.active} #  prod
+  #PostgreSQL
+  mail:
+    host: zmaildev.egovja.com
+    port: 25 #587
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: false
+            required: false
+          auth: false
+          connectiontimeout: 500
+          timeout: 5000
+          writetimeout: 5000
+  datasource:
+#    jndi-name: java:jboss/PostgreSQL/MOEYI_ECENSUS
+          url: jdbc:postgresql://localhost:5432/vertis_timesheet    #   moeyi
+          username: postgres
+          password: admin
+  initialization-mode: always
+
+  jpa:
+    hibernate:
+      #Hibernate ddl auto (create, create-drop, validate, update)
+      ddl-auto: validate
+    properties:
+      hibernate:
+        hbm2ddl:
+          import_files:
+        format_sql: true
+      javax:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            scripts:
+              action: create
+              create-target: database-schema.sql
+    show-sql: true
+  flyway:
+    #    enabled: false
+    locations: classpath:db/migration/postgresql # classpath:/
+    baseline-On-Migrate: true
+    check-location: false
+
+---
+spring:
+  profiles: dev
+  datasource:
+    jndi-name: ${POSTGRESQL_DATASOURCE_JNDI}
+
+
+
+
